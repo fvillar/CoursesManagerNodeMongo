@@ -14,7 +14,6 @@ class CourseForm extends Component {
 
         this.formButtonLabel = 'Add Course';
         this.formForAdd = true;
-        this.isSaveButtonEnable = true;
     }
 
     handleSubmit() {
@@ -38,54 +37,47 @@ class CourseForm extends Component {
         browserHistory.push('/');
     }
 
-    isValid(newCourse){
-        let saveButton = newCourse.forEach((prop) => {
-            // console.log('key', prop.get('key'));
-            //  console.log('value', prop.get('value'));
+    isValid(fields) {
+        let isValid = fields.every((v) => {
 
-            if (prop.get('key') != 'Id' && prop.get('value') == '') {
-                this.isSaveButtonEnable = false; 
-                return;
-            }
-
-        });
-
-        this.isSaveButtonEnable = true;
-
-
-    }
-
-    displaySaveButton(newCourse) {
-
-        let isValid = newCourse.every((v)=>{
-            if(v.get('key') != 'Id'){
-                if(v.get('value') == '') {
+            if (v.get('key') != 'Id') {
+                if (v.get('value') == '') {
                     return false;
                 }
             }
             return true;
         });
 
-        if (isValid) {
+        return isValid;
+    }
+
+    displaySaveButton(newCourse) {
+
+        if (this.isValid(newCourse)) {
+
             return (<Button type="submit"
                 className="btn btn-primary"
                 onClick={() => this.handleSubmit()}>
+
                 {this.formButtonLabel}
+
             </Button>);
-        }else {  
+        } else {
             return (<Button disabled type="submit"
                 className="btn btn-primary"
                 onClick={() => this.handleSubmit()}>
+
                 {this.formButtonLabel}
+
             </Button>);
         }
-
     }
 
     render() {
 
         const inputFields = this.props.newCourse.map((v, i) => {
             if (v.get('key') == 'Id') {
+
                 if (v.get('value') != null) {
                     this.formButtonLabel = 'Update Course';
                     this.formForAdd = false;
@@ -112,8 +104,6 @@ class CourseForm extends Component {
             }
         });
 
-        console.log('course form render', this.props.newCourse.toJS());
-
         return (
             <div className="form-horizontal">
 
@@ -123,7 +113,7 @@ class CourseForm extends Component {
                     <div className="col-sm-offset-2 col-sm-10">
                         <ButtonToolbar>
 
-                            {this.displaySaveButton(this.props.newCourse) }
+                            {this.displaySaveButton(this.props.newCourse)}
 
                             <Button
                                 className="btn btn-danger"
