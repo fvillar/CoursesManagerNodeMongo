@@ -85,13 +85,15 @@ class CourseForm extends Component {
             }
 
             if (v.get('value') != null && v.get('type') == 'text') {
+                                
                 return <TextInput
                     title={v.get('title')}
                     value={v.get('value')}
                     key={i}
                     index={i}
                     required={v.get('required')}
-                    dataType={v.get('dataType')} />;
+                    dataType={v.get('dataType')}
+                    enable={!v.get('enable')} />;
             }
 
             if (v.get('value') != null && v.get('type') == 'dropdown') {

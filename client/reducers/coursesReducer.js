@@ -30,13 +30,16 @@ function coursesReducer(state = courseInitialState.courses, action) {
             state = state.set('course', courseInitialState.courses.get('course'));
             //Set every item from the course to defaultState-like obj
             state = state.update('course', (course) =>
-                course = state.get('course').map((field) => {
+                course = state.get('course').map((field) => {                    
 
                     return Immutable.Map({
                         key: field.get('key'),
                         value: action.currentCourse.get(field.get('key')),
                         title: field.get('title'),
                         type: field.get('type'),
+                        enable: !field.get('enable'),
+                        dataType: field.get('dataType'),
+                        required: field.get('required'),
                     });
                 }));
             return state;

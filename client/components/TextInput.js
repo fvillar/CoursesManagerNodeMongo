@@ -36,7 +36,7 @@ class TextInput extends Component {
             return 'error';
     }
 
-    render() {        
+    render() {          
         if (this.props.required) {
             return (
                 <FormGroup validationState={this.getValidationState()} >
@@ -50,7 +50,8 @@ class TextInput extends Component {
                             type="text"
                             onChange={(e) => this.updateValue(e.target.value, this.props.index)}
                             value={this.props.value}
-                            placeholder={_.capitalize(this.props.title)} />
+                            placeholder={_.capitalize(this.props.title)} 
+                            disabled={this.props.enable} />
                     </Col>
                 </FormGroup>
             );
@@ -67,7 +68,8 @@ class TextInput extends Component {
                             type="text"
                             onChange={(e) => this.updateValue(e.target.value, this.props.index)}
                             value={this.props.value}
-                            placeholder={_.capitalize(this.props.title)} />
+                            placeholder={_.capitalize(this.props.title)} 
+                            disabled={this.props.enable} />
                     </Col>
                 </FormGroup>
             );
