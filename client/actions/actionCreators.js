@@ -69,6 +69,30 @@ class CourseActions {
     // =============== ASYNC CALLS =================== //
     // =============================================== //
 
+    static searchColumnsAsync(keys, value) {  
+
+        var searchStack; 
+        
+        searchStack.push({value: value});
+
+        return function (dispatch) {
+
+            axios.get('/api/search')
+                .then(function (response) {
+
+                    if(response.data.query == searchStack[searchStack.legth-1].query) {
+                        dispatch(CourseActions.loadCourses(response.data));
+                    }
+
+                })
+                .catch(function (response) {
+                    console.log('Error in loadCoursesAsync ' + response);
+                });
+
+        };
+    }
+
+
     static loadCoursesAsync() {
 
         return function (dispatch) {

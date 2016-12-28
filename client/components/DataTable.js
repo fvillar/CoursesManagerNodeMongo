@@ -16,24 +16,31 @@ class DataTable extends Component {
         let coursesList = this.props.courses.get('coursesList');
 
         let options = { 
+            search: [{
+                placeHolder: "Search By Title",
+                keys: ['title'],
+                querySearch: CourseActions.searchColumnsAsync                
+            }],
+
             /*
                 key: is the key for the item
                 name: is the name of the column header
                 serverSort: this will sort the list in the server and its expecting a async call to that method
                 sortOrder: it could be ascending('asc') or descending('desc'). NOTE: It could be only in one column
-            */
+            */            
+
             columns: [{
                 key: 'Id',
                 name: 'ID',
                 // serverSort: CourseActions.sortCoursesInServerAsync,
-                clientSort: true,
+                clientSort: CourseActions.sortCoursesInClient,
                 sortOrder: 'asc'
             },
             {
                 key: 'title',
                 name: 'Title',
                 // serverSort: CourseActions.sortCoursesInServerAsync,
-                clientSort: true
+                clientSort: CourseActions.sortCoursesInClient
             }]
         };
 

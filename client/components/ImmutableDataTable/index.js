@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Table } from 'react-bootstrap';
+import { Table, FormControl } from 'react-bootstrap';
 import Immutable from 'immutable';
 
 import CourseActions from '../../actions/actionCreators';
@@ -11,12 +11,13 @@ class ImmutableDataGrid extends Component {
         this.state = this.initialState();
     }
 
-    initialState() {
+    initialState() {    
         return {
             columns: this.props.options.columns,
-            // sortType: 'client' //server
+            search: (this.props.options.search || undefined)
         };
     }
+
 
     handleServerSort(method, key) {
 
@@ -46,7 +47,7 @@ class ImmutableDataGrid extends Component {
 
     }
 
-    handleClientSort(key) {
+    handleClientSort(method, key) {
 
         let sortOrder;
         this.state.columns.forEach((v, i) => {
@@ -68,9 +69,26 @@ class ImmutableDataGrid extends Component {
             }
         });
 
-        this.props.dispatch(CourseActions.sortCoursesInClient(key, sortOrder));
+        this.props.dispatch(method(key, sortOrder));
 
         this.setState(this.state);
+    }
+
+    search(i, value) {
+        this.props.dispatch(this.state.search[i].querySearch(this.state.search[i].keys, value));
+    }
+
+    renderSearchFilters() {
+
+        if(!this.state.search){
+            return <span></span>;
+        }
+        
+        return this.state.search.map((v, i)=>{            
+            return <div key={i} style={{paddingBottom: '10px', paddingRight: '10px', float: 'left'}}>
+                <FormControl onKeyPress={(e)=>this.search(i, e.target.value)} style={{width:'200px'}} type="text" placeholder={v.placeHolder} />
+            </div>;
+        });
     }
 
     renderHead() {
@@ -97,7 +115,7 @@ class ImmutableDataGrid extends Component {
             } else if (v.clientSort) {
                 return <th style={{ cursor: 'pointer' }}
                     key={i}
-                    onClick={(i) => this.handleClientSort(v.key)}>
+                    onClick={(i) => this.handleClientSort(v.clientSort, v.key)}>
 
                     {v.name} {sortIcon}
 
@@ -134,10 +152,13 @@ class ImmutableDataGrid extends Component {
 
     render() {
         return (
-            <Table striped bordered condensed hover>
-                {this.renderHead()}
-                {this.renderRows()}
-            </Table>
+            <div>
+                {this.renderSearchFilters()}
+                <Table striped bordered condensed hover>
+                    {this.renderHead()}
+                    {this.renderRows()}
+                </Table>
+            </div>
         );
     }
 
