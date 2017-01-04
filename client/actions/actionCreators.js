@@ -71,27 +71,26 @@ class CourseActions {
 
     static searchColumnsAsync(keys, value) {  
 
-        var searchStack; 
+        // var searchStack; 
         
-        searchStack.push({value: value});
+        // searchStack.push({value: value});
 
         return function (dispatch) {
 
-            axios.get('/api/search')
-                .then(function (response) {
+            // axios.get('/api/search')
+            //     .then(function (response) {
 
-                    if(response.data.query == searchStack[searchStack.legth-1].query) {
-                        dispatch(CourseActions.loadCourses(response.data));
-                    }
+            //         if(response.data.query == searchStack[searchStack.legth-1].query) {
+            //             dispatch(CourseActions.loadCourses(response.data));
+            //         }
 
-                })
-                .catch(function (response) {
-                    console.log('Error in loadCoursesAsync ' + response);
-                });
+            //     })
+            //     .catch(function (response) {
+            //         console.log('Error in loadCoursesAsync ' + response);
+            //     });
 
         };
     }
-
 
     static loadCoursesAsync() {
 
@@ -109,11 +108,8 @@ class CourseActions {
     static sortCoursesInServerAsync(data) {
 
         return function (dispatch) {
-            axios.get(base + '/courses')
+            axios.get(`/api/courses/sort/${data.key}/${data.order}`)
                 .then(function (response) {
-                    response.data.forEach((v, i) => {
-                        response.data[i].title = v.title + " Some Extra text";
-                    });
                     dispatch(CourseActions.loadCourses(response.data));
                 })
                 .catch(function (response) {
@@ -139,8 +135,6 @@ class CourseActions {
     static updateCourseAsync(course) {
 
         return function (dispatch) {
-            console.log('updateCourseAsync', course);
-
             axios.put(`api/courses/${course.Id}`, course)
                 .then(function () {
                     dispatch(CourseActions.loadCoursesAsync());

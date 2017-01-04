@@ -50,7 +50,7 @@ app.post('/api/courses', function (req, res) {
     new: true
   }, function (err, v) {
 
-    db.authors.findOne({ Id: parseInt(data.authorId) }, function (err, author) {      
+    db.authors.findOne({ Id: parseInt(data.authorId) }, function (err, author) {
 
       var saveCourse = {
         '_id': mongojs.ObjectId(),
@@ -114,6 +114,18 @@ app.get('/api/authors', function (req, res) {
 app.get('/api/authors/:id', function (req, res) {
   db.authors.find({ Id: parseInt(req.params.id) }, function (err, author) {
     res.send(author);
+  });
+});
+
+app.get('/api/courses/sort/:sortColumn/:sortOrder', function (req, res) {
+  var sort = {};
+  if (req.params.sortOrder == 'asc')
+    sort[req.params.sortColumn] = 1;
+  else
+    sort[req.params.sortColumn] = -1;
+
+  db.courses.find().sort(sort, function (err, courses) {
+    res.send(courses);
   });
 });
 

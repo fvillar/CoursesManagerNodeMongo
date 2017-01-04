@@ -32,15 +32,33 @@ class DataTable extends Component {
             columns: [{
                 key: 'Id',
                 name: 'ID',
-                // serverSort: CourseActions.sortCoursesInServerAsync,
-                clientSort: CourseActions.sortCoursesInClient,
+                serverSort: CourseActions.sortCoursesInServerAsync,
+                // clientSort: CourseActions.sortCoursesInClient,
                 sortOrder: 'asc'
             },
             {
                 key: 'title',
                 name: 'Title',
-                // serverSort: CourseActions.sortCoursesInServerAsync,
-                clientSort: CourseActions.sortCoursesInClient
+                serverSort: CourseActions.sortCoursesInServerAsync,
+                // clientSort: CourseActions.sortCoursesInClient
+            },
+            {
+                key: 'authorName',
+                name: 'Author Name',
+                serverSort: CourseActions.sortCoursesInServerAsync,
+                // clientSort: CourseActions.sortCoursesInClient
+            },
+            {
+                key: 'length',
+                name: 'Length',
+                serverSort: CourseActions.sortCoursesInServerAsync,
+                // clientSort: CourseActions.sortCoursesInClient
+            },
+            {
+                key: 'category',
+                name: 'Category',
+                serverSort: CourseActions.sortCoursesInServerAsync,
+                // clientSort: CourseActions.sortCoursesInClient
             }]
         };
 
