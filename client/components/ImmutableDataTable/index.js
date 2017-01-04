@@ -154,7 +154,7 @@ class ImmutableDataGrid extends Component {
         return (
             <div>
                 {this.renderSearchFilters()}
-                <Table striped bordered condensed hover>
+                <Table condensed hover>
                     {this.renderHead()}
                     {this.renderRows()}
                 </Table>
