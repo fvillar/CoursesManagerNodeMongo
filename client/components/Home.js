@@ -17,7 +17,7 @@ class Home extends Component {
         setTimeout(() => {
             this.props.dispatch(CourseActions.setCourseIsLoading(true));
             this.props.dispatch(CourseActions.loadCoursesAsync());
-        }, 3000);
+        },2000);
     }
 
     onAddClick() {
@@ -34,18 +34,20 @@ class Home extends Component {
         const {courses} = this.props;
 
         if (courses.get('isLoading'))
-            return (<div class="bookshelf_wrapper">
-            <h1>loading...</h1>
-                <ul class="books_list">
-                    <li class="book_item first"></li>
-                    <li class="book_item second"></li>
-                    <li class="book_item third"></li>
-                    <li class="book_item fourth"></li>
-                    <li class="book_item fifth"></li>
-                    <li class="book_item sixth"></li>
-                </ul>
-                <div class="shelf"></div>
-            </div>);
+            return (
+                <div className="container" style={{height:'500px'}}>
+                    <div className="bookshelf_wrapper">
+                        <ul className="books_list">
+                            <li className="book_item first"></li>
+                            <li className="book_item second"></li>
+                            <li className="book_item third"></li>
+                            <li className="book_item fourth"></li>
+                            <li className="book_item fifth"></li>
+                            <li className="book_item sixth"></li>
+                        </ul>
+                        <div className="shelf"></div>
+                    </div>
+                </div>);
         else
             return (
                 <div className="container">
