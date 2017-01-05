@@ -93,6 +93,7 @@ class CourseForm extends Component {
                     index={i}
                     required={v.get('required')}
                     dataType={v.get('dataType')}
+                    validationException={v.get('validationException')}
                     enable={!v.get('enable')} />;
             }
 

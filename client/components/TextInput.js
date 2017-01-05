@@ -25,10 +25,11 @@ class TextInput extends Component {
         //TODO: if there is a number only
         if (this.isLoading) return;
 
+        const { dataType, value, validationException} = this.props;
         const length = this.props.value.length;
 
         if (length > 0)
-            if(this.props.dataType == 'number' && isNaN(this.props.value))
+            if(dataType == 'number' && isNaN(_.replace(value, validationException,'')))
                 return 'error';
             else
                 return 'success';
