@@ -3,6 +3,7 @@ import Immutable from 'immutable';
 export default {
     courses: Immutable.fromJS({
         coursesList: [],
+        isLoading: true,
         course: [
             { key: 'Id', value: null, title: 'ID', type: 'text', dataType: 'number', required: true, enable: false},
             { key: 'title', value: '', title: 'Title', type: 'text', dataType: 'string', required: true, enable: true },

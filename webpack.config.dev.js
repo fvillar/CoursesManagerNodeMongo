@@ -29,10 +29,30 @@ module.exports = {
         include: path.join(__dirname, 'client')
       },
       // CSS
+      // {
+      //   test: /(\.css)$/,
+      //   loaders: ['styles', 'css']
+      // }
       {
-        test: /(\.css)$/,
-        loaders: ['styles', 'css']
-      }
-    ]
+        test: /\.css$/,
+        loader: "styles!css"
+      },
+      {
+        test: /\.scss$/,
+        loader: "style!css!autoprefixer!sass"
+      },
+      // {
+      //   test: /\.scss$/,
+      //   loader: 'style-loader'
+      // }, {
+      //   test: /\.scss$/,
+      //   loader: 'css-loader',
+      //   query: {
+      //     modules: true,
+      //     localIdentName: '[name]__[local]___[hash:base64:5]'
+      //   }
+      // }
+    ],
+
   }
 };

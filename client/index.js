@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 
 // Import css
-// import './styles/styles.css'; //Webpack can import CSS file too!
+import './styles/styles.scss'; //Webpack can import CSS file too!
 // import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 // import react router deps

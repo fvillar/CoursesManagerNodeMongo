@@ -65,6 +65,13 @@ class CourseActions {
         };
     }
 
+    static setCourseIsLoading(bool) {
+        return {
+            type: Constants.SET_COURSE_ISLOADING,
+            value: bool
+        };
+    }
+
     // =============================================== //
     // =============== ASYNC CALLS =================== //
     // =============================================== //
@@ -98,6 +105,7 @@ class CourseActions {
             axios.get('/api/courses')
                 .then(function (response) {
                     dispatch(CourseActions.loadCourses(response.data));
+                    dispatch(CourseActions.setCourseIsLoading(false));
                 })
                 .catch(function (response) {
                     console.log('Error in loadCoursesAsync ' + response);

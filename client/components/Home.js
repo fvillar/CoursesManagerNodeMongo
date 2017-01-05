@@ -14,7 +14,10 @@ class Home extends Component {
     }
 
     componentWillMount() {
-        this.props.dispatch(CourseActions.loadCoursesAsync());
+        setTimeout(() => {
+            this.props.dispatch(CourseActions.setCourseIsLoading(true));
+            this.props.dispatch(CourseActions.loadCoursesAsync());
+        }, 3000);
     }
 
     onAddClick() {
@@ -30,30 +33,44 @@ class Home extends Component {
 
         const {courses} = this.props;
 
-        return (
-            <div className="container">
-                <div className="jumbotron">
-                    <h1>Courses Manager</h1>
-                    <div style={{ float: 'right' }}>
-                        <ButtonToolbar>
-                        <Button bsStyle="primary"
-                            className="glyphicon glyphicon-plus"
-                            onClick={() => this.onAddClick()}>
-                            Add
-                        </Button>
-                        <Button bsStyle="primary"
-                            className="glyphicon glyphicon-th-list"
-                            onClick={() => this.onTableClick()}>
-                            DataTable
-                        </Button>
-                        </ButtonToolbar>
+        if (courses.get('isLoading'))
+            return (<div class="bookshelf_wrapper">
+            <h1>loading...</h1>
+                <ul class="books_list">
+                    <li class="book_item first"></li>
+                    <li class="book_item second"></li>
+                    <li class="book_item third"></li>
+                    <li class="book_item fourth"></li>
+                    <li class="book_item fifth"></li>
+                    <li class="book_item sixth"></li>
+                </ul>
+                <div class="shelf"></div>
+            </div>);
+        else
+            return (
+                <div className="container">
+                    <div className="jumbotron">
+                        <h1>Courses Manager</h1>
+                        <div style={{ float: 'right' }}>
+                            <ButtonToolbar>
+                                <Button bsStyle="primary"
+                                    className="glyphicon glyphicon-plus"
+                                    onClick={() => this.onAddClick()}>
+                                    Add
+                            </Button>
+                                <Button bsStyle="primary"
+                                    className="glyphicon glyphicon-th-list"
+                                    onClick={() => this.onTableClick()}>
+                                    DataTable
+                            </Button>
+                            </ButtonToolbar>
+                        </div>
+                    </div>
+                    <div>
+                        <CourseList courses={courses} />
                     </div>
                 </div>
-                <div>
-                    <CourseList courses={courses} />
-                </div>
-            </div>
-        );
+            );
     }
 }
 

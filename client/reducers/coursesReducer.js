@@ -30,7 +30,7 @@ function coursesReducer(state = courseInitialState.courses, action) {
             state = state.set('course', courseInitialState.courses.get('course'));
             //Set every item from the course to defaultState-like obj
             state = state.update('course', (course) =>
-                course = state.get('course').map((field) => {                    
+                course = state.get('course').map((field) => {
 
                     return Immutable.Map({
                         key: field.get('key'),
@@ -52,7 +52,7 @@ function coursesReducer(state = courseInitialState.courses, action) {
                             && isNaN(b.get(action.sortColumn))) {
                             return a.get(action.sortColumn).localeCompare(b.get(action.sortColumn));
                         }
-                        else{
+                        else {
                             return a.get(action.sortColumn) - b.get(action.sortColumn);
                         }
                     }));
@@ -62,6 +62,10 @@ function coursesReducer(state = courseInitialState.courses, action) {
                     (a, b) => b.get('title').localeCompare(a.get('title'))
                 ));
             }
+            return state;
+
+        case constants.SET_COURSE_ISLOADING:
+            state = state.set('isLoading', action.value);
             return state;
 
         default:
