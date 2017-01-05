@@ -22,7 +22,6 @@ class TextInput extends Component {
     }
 
     getValidationState() {
-        //TODO: if there is a number only
         if (this.isLoading) return;
 
         const { dataType, value, validationException} = this.props;

@@ -37,8 +37,9 @@ function coursesReducer(state = courseInitialState.courses, action) {
                         value: action.currentCourse.get(field.get('key')),
                         title: field.get('title'),
                         type: field.get('type'),
-                        enable: !field.get('enable'),
+                        enable: field.get('enable'),
                         dataType: field.get('dataType'),
+                        validationException: field.get('validationException'),
                         required: field.get('required'),
                     });
                 }));
