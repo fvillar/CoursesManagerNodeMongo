@@ -72,33 +72,17 @@ class CourseActions {
         };
     }
 
-    // =============================================== //
-    // =============== ASYNC CALLS =================== //
-    // =============================================== //
-
-    static searchColumnsAsync(keys, value) {  
-
-        // var searchStack; 
-        
-        // searchStack.push({value: value});
-
-        return function (dispatch) {
-
-            // axios.get('/api/search')
-            //     .then(function (response) {
-
-            //         if(response.data.query == searchStack[searchStack.legth-1].query) {
-            //             dispatch(CourseActions.loadCourses(response.data));
-            //         }
-
-            //     })
-            //     .catch(function (response) {
-            //         console.log('Error in loadCoursesAsync ' + response);
-            //     });
-
+    static coursesCount(num) {
+        return {
+            type: Constants.COURSES_COUNT,
+            count: num
         };
     }
 
+    // =============================================== //
+    // =============== ASYNC CALLS =================== //
+    // =============================================== //
+ 
     static loadCoursesAsync() {
 
         return function (dispatch) {
@@ -113,17 +97,47 @@ class CourseActions {
         };
     }
 
-    static sortCoursesInServerAsync(data) {
+    static filterUsersInServerAsync(data) {
+         return function (dispatch) {
+            let queryUrl = '';
+            let isSorting = false;
 
-        return function (dispatch) {
-            axios.get(`/api/courses/sort/${data.key}/${data.order}`)
+            if (data['sort']) {
+                isSorting = true;
+                queryUrl += `sortColumn=${data['sort'].key}&sortOrder=${data['sort'].order}`;
+            }
+
+            if (data['search']) {
+                if (data['search'].value != '') {
+                    if (isSorting)
+                        queryUrl += '&';
+
+                    queryUrl += `searchColumn=${data['search'].keys[0]}&searchValue=${data['search'].value}`;
+                }
+            }
+
+            axios.get(`api/courses/filter/${data.page}?${queryUrl}`)
                 .then(function (response) {
-                    dispatch(CourseActions.loadCourses(response.data));
+                    console.log('res', response.data);
+                    
+                    dispatch(CourseActions.coursesCount(response.data.count));
+                    dispatch(CourseActions.loadCourses(response.data.courses));
+                    dispatch(CourseActions.setCourseIsLoading(false));
                 })
                 .catch(function (response) {
-                    console.log('Error in loadCoursesAsync ' + response);
+                    console.log('Error in filterUsersInServerAsync ' + response);
                 });
         };
+
+        // return function (dispatch) {
+        //     axios.get(`/api/courses/filter/${data.key}/${data.order}`)
+        //         .then(function (response) {
+        //             dispatch(CourseActions.loadCourses(response.data));
+        //         })
+        //         .catch(function (response) {
+        //             console.log('Error in loadCoursesAsync ' + response);
+        //         });
+        // };
     }
 
     static addCourseAsync(course) {

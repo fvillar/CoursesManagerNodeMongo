@@ -117,17 +117,78 @@ app.get('/api/authors/:id', function (req, res) {
   });
 });
 
-app.get('/api/courses/sort/:sortColumn/:sortOrder', function (req, res) {
-  var sort = {};
-  if (req.params.sortOrder == 'asc')
-    sort[req.params.sortColumn] = 1;
-  else
-    sort[req.params.sortColumn] = -1;
+//:sortColumn?/:sortOrder?/:searchColumn?/:searchValue? as optional parameters
+app.get('/api/courses/filter/:pageNumber/', function (req, res) {
 
-  db.courses.find().sort(sort, function (err, courses) {
-    res.send(courses);
-  });
+  var sortColumn = req.query.sortColumn;
+  var sortOrder = req.query.sortOrder;
+  var searchColumn = req.query.searchColumn;
+  var searchValue = req.query.searchValue;
+
+  var itemsPerPage = 5;
+  // var numTotalItems = db.courses.count();
+  var pageEnd = req.params.pageNumber * itemsPerPage;
+  var pageStart = pageEnd - itemsPerPage;
+
+  //Paging Only
+  if (sortColumn == undefined && searchColumn == undefined) {
+    db.courses.find({}, function (err, courses) {
+      if (courses.length > itemsPerPage) {
+        res.json({count: courses.length, courses: courses.slice(pageStart, pageEnd)});
+      } else {
+        res.json({count: courses.length, courses: courses});
+      }
+    });
+  }
+  else {
+    //Sort, NO Search
+    if (sortColumn != undefined && searchColumn == undefined) {
+      var sort = {};
+      if (sortOrder == 'asc')
+        sort[sortColumn] = 1;
+      else
+        sort[sortColumn] = -1;
+
+      db.courses.find().sort(sort, function (err, courses) {
+        res.json({count: courses.length, courses: courses.slice(pageStart, pageEnd)});
+      });
+    } else {
+      //Search, NO Sort
+      if (sortColumn == undefined && searchColumn != undefined) {
+        var search = {};
+
+        search[searchColumn] = new RegExp(searchValue);
+        // search = { title: { $regex: "to" } }// same as /to/        
+
+        db.courses.find(search, function (err, courses) {
+          if (courses.length > itemsPerPage) {
+            res.json({count: courses.length, courses: courses.slice(pageStart, pageEnd)});
+          } else {
+            res.json({count: courses.length, courses: courses});
+          }
+        });
+      } else {
+        //Search AND Sort
+        if (sortColumn != undefined && searchColumn != undefined) {
+          //sort
+          var sorts = {};
+          if (sortOrder == 'asc')
+            sorts[sortColumn] = 1;
+          else
+            sorts[sortColumn] = -1;
+          //search
+          var searches = {};
+          searches[searchColumn] = new RegExp(searchValue);          
+
+          db.courses.find(searches).sort(sorts, function (err, courses) {
+            res.json({count: courses.length, courses: courses.slice(pageStart, pageEnd)});
+          });
+        }
+      }
+    }
+  }
 });
+
 
 // =============================================== //
 // =============================================== //

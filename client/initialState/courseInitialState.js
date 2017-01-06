@@ -4,6 +4,9 @@ export default {
     courses: Immutable.fromJS({
         coursesList: [],
         isLoading: true,
+        activePage: 1,
+        count: 0,
+        coursesPerPage: 5,
         course: [
             {
                 key: 'Id',

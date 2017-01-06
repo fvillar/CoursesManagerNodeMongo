@@ -10,7 +10,7 @@ class DataTableContainer extends Component {
     }
 
     componentWillMount() {
-        this.props.dispatch(CourseActions.loadCoursesAsync());
+        this.props.dispatch(CourseActions.filterUsersInServerAsync({ page: 1, type: 'paging' }));
     }
 
     render() {

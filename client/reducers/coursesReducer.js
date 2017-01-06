@@ -68,6 +68,9 @@ function coursesReducer(state = courseInitialState.courses, action) {
         case constants.SET_COURSE_ISLOADING:
             state = state.set('isLoading', action.value);
             return state;
+        case constants.COURSES_COUNT:
+            state = state.set('count', (action.count));
+            return state;
 
         default:
             return state;

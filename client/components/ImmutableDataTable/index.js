@@ -1,25 +1,53 @@
 import React, { Component, PropTypes } from 'react';
-import { Table, FormControl } from 'react-bootstrap';
+import { Table, FormControl, Pagination } from 'react-bootstrap';
 import Immutable from 'immutable';
 
 import CourseActions from '../../actions/actionCreators';
+import courseInitialState from '../../initialState/courseInitialState';
 
 class ImmutableDataGrid extends Component {
 
     constructor(props) {
         super(props);
         this.state = this.initialState();
-    }
-
-    initialState() {    
-        return {
-            columns: this.props.options.columns,
-            search: (this.props.options.search || undefined)
+        this.filterQuery = {
+            page: this.state.page
         };
     }
 
+    initialState() {
+        return {
+            columns: this.props.options.columns,
+            search: (this.props.options.search || undefined),
+            page: 1
+        };
+    }
 
-    handleServerSort(method, key) {
+    filter(data) {
+        switch (data.type) {
+            case 'sort':
+                this.filterQuery['sort'] = {
+                    key: data.key,
+                    order: data.order
+                };
+                break;
+            case 'search':
+                this.filterQuery['search'] = {
+                    keys: data.keys,
+                    value: data.value
+                };
+                break;
+            case 'paging':
+                this.filterQuery['page'] = data.pageNum;
+                break;
+            default:
+                break;
+        }
+
+        this.props.dispatch(this.props.options.filter(this.filterQuery));
+    }
+
+    handleServerSort(key) {
 
         let sortOrder;
         this.state.columns.forEach((v, i) => {
@@ -41,7 +69,7 @@ class ImmutableDataGrid extends Component {
             }
         });
 
-        this.props.dispatch(method({ key: key, order: sortOrder }));
+        this.filter({ key: key, order: sortOrder, type: 'sort' }); 
 
         this.setState(this.state);
 
@@ -75,24 +103,26 @@ class ImmutableDataGrid extends Component {
     }
 
     search(i, value) {
-        this.props.dispatch(this.state.search[i].querySearch(this.state.search[i].keys, value));
+        this.filter({ keys: this.state.search[i].keys, value: value, type: 'search' });
     }
 
     renderSearchFilters() {
 
-        if(!this.state.search){
+        if (!this.state.search) {
             return <span></span>;
         }
-        
-        return this.state.search.map((v, i)=>{            
-            return <div key={i} style={{paddingBottom: '10px', paddingRight: '10px', float: 'left'}}>
-                <FormControl onKeyPress={(e)=>this.search(i, e.target.value)} style={{width:'200px'}} type="text" placeholder={v.placeHolder} />
+
+        return this.state.search.map((v, i) => {
+            return <div key={i} style={{ paddingBottom: '10px', paddingRight: '10px', float: 'left' }}>
+                <FormControl onKeyUp={(e) => this.search(i, e.target.value)}
+                    style={{ width: '200px' }}
+                    type="text" placeholder={v.placeHolder} />
             </div>;
         });
     }
 
     renderHead() {
-        
+
         let columns = this.state.columns.map((v, i) => {
             let sortIcon = '';
 
@@ -106,7 +136,7 @@ class ImmutableDataGrid extends Component {
 
             if (v.serverSort) {
                 return <th style={{ cursor: 'pointer' }}
-                    onClick={(i) => this.handleServerSort(v.serverSort, v.key)}
+                    onClick={() => this.handleServerSort(v.key)}
                     key={i}>
 
                     {v.name} {sortIcon}
@@ -150,7 +180,16 @@ class ImmutableDataGrid extends Component {
         );
     }
 
+    handlePageSelect(pageNum) {
+        this.filter({ pageNum: pageNum, type: 'paging' });
+        this.setState({ page: pageNum });
+    }
+
     render() {
+        let totalNumRecords = this.props.listLength;
+        let itemsPerPage = courseInitialState.courses.get('coursesPerPage');
+        let totalPages = Math.ceil(totalNumRecords / itemsPerPage);
+       
         return (
             <div>
                 {this.renderSearchFilters()}
@@ -158,10 +197,22 @@ class ImmutableDataGrid extends Component {
                     {this.renderHead()}
                     {this.renderRows()}
                 </Table>
+                <Pagination
+                    style={{ float: 'right', marginTop: '-10px', paddingRight: '13px' }}
+                    prev
+                    next
+                    first
+                    last
+                    ellipsis
+                    boundaryLinks
+                    bsSize="medium"
+                    items={totalPages}
+                    maxButtons={5}
+                    activePage={this.state.page}
+                    onSelect={(e) => this.handlePageSelect(e)} />
             </div>
         );
     }
-
 }
 
 //export default connect()(ImmutableDataGrid);

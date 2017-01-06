@@ -14,12 +14,14 @@ class DataTable extends Component {
     render() {
 
         let coursesList = this.props.courses.get('coursesList');
+        let totalNumRecords = this.props.courses.get('count');
 
         let options = { 
+            /* Function that will provide the list with the applied filter (sort, paging, search) */
+            filter: CourseActions.filterUsersInServerAsync,
             search: [{
-                placeHolder: "Search By Title",
-                keys: ['title'],
-                querySearch: CourseActions.searchColumnsAsync                
+                placeHolder: 'Search By Title',
+                keys: ['title']               
             }],
 
             /*
@@ -32,32 +34,32 @@ class DataTable extends Component {
             columns: [{
                 key: 'Id',
                 name: 'ID',
-                serverSort: CourseActions.sortCoursesInServerAsync,
+                serverSort: true,
                 // clientSort: CourseActions.sortCoursesInClient,
                 sortOrder: 'asc'
             },
             {
                 key: 'title',
                 name: 'Title',
-                serverSort: CourseActions.sortCoursesInServerAsync,
+                serverSort: true,
                 // clientSort: CourseActions.sortCoursesInClient
             },
             {
                 key: 'authorName',
                 name: 'Author Name',
-                serverSort: CourseActions.sortCoursesInServerAsync,
+                serverSort: true,
                 // clientSort: CourseActions.sortCoursesInClient
             },
             {
                 key: 'length',
                 name: 'Length',
-                serverSort: CourseActions.sortCoursesInServerAsync,
+                serverSort: true,
                 // clientSort: CourseActions.sortCoursesInClient
             },
             {
                 key: 'category',
                 name: 'Category',
-                serverSort: CourseActions.sortCoursesInServerAsync,
+                serverSort: true,
                 // clientSort: CourseActions.sortCoursesInClient
             }]
         };
@@ -72,7 +74,8 @@ class DataTable extends Component {
                 <ImmutableDataGrid
                     options={options}
                     dispatch={this.props.dispatch}
-                    immutableData={coursesList} />
+                    immutableData={coursesList} 
+                    listLength={totalNumRecords} />
 
             </div>
         );
