@@ -53,6 +53,7 @@
     "body-parser": "^1.15.2",
     "mongodb": "^2.2.16",
     "mongojs": "^2.4.0",
+    "node-sass": "^4.1.1",
     "redux-thunk": "^2.1.0"
   }
 }
