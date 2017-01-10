@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Table, FormControl, Pagination } from 'react-bootstrap';
+import { Table, FormControl, Pagination, ControlLabel } from 'react-bootstrap';
 import Immutable from 'immutable';
 
 import CourseActions from '../../actions/actionCreators';
@@ -19,6 +19,7 @@ class ImmutableDataGrid extends Component {
         return {
             columns: this.props.options.columns,
             search: (this.props.options.search || undefined),
+            searchLimit: (this.props.options.searchLimit) ? this.props.options.searchLimit[0] : undefined,
             page: 1
         };
     }
@@ -32,9 +33,12 @@ class ImmutableDataGrid extends Component {
                 };
                 break;
             case 'search':
-                this.filterQuery['search'] = {
+                if (!this.filterQuery['search'])
+                    this.filterQuery['search'] = [];
+                this.filterQuery['search'][data.i] = {
                     keys: data.keys,
-                    value: data.value
+                    value: data.value,
+                    limit: data.limit
                 };
                 break;
             case 'paging':
@@ -69,7 +73,7 @@ class ImmutableDataGrid extends Component {
             }
         });
 
-        this.filter({ key: key, order: sortOrder, type: 'sort' }); 
+        this.filter({ key: key, order: sortOrder, type: 'sort' });
 
         this.setState(this.state);
 
@@ -103,7 +107,13 @@ class ImmutableDataGrid extends Component {
     }
 
     search(i, value) {
-        this.filter({ keys: this.state.search[i].keys, value: value, type: 'search' });
+        this.filter({
+            keys: this.state.search[i].keys,
+            value: value,
+            type: 'search',
+            i: i,
+            limit: this.state.searchLimit
+        });
     }
 
     renderSearchFilters() {
@@ -185,11 +195,42 @@ class ImmutableDataGrid extends Component {
         this.setState({ page: pageNum });
     }
 
+    handleResultLimitChange(e) {
+        this.setState({ searchLimit: e });
+    }
+
     render() {
         let totalNumRecords = this.props.listLength;
         let itemsPerPage = courseInitialState.courses.get('coursesPerPage');
         let totalPages = Math.ceil(totalNumRecords / itemsPerPage);
-       
+
+        let searchLimitOptions = (this.props.options.searchLimit) ?
+            this.props.options.searchLimit.map((v, i) => {
+                return (<option key={i} value={v}>{v}</option>);
+            }) :
+            (<option value="0">0</option>);
+
+        let limitDropDown = (this.props.options.search) ?
+            (
+                <div className="form-inline">
+                    <ControlLabel>View</ControlLabel>
+                    <FormControl componentClass="select"
+                        onChange={(e) => this.handleResultLimitChange(e.target.value)}
+                        style={{
+                            width: '100px',
+                            marginTop: '10px',
+                            marginBottom: '10px',
+                            marginLeft: '10px'
+                        }}>
+                        {searchLimitOptions}
+                    </FormControl>
+                </div>
+            )
+            :
+            (
+                <div className="form-inline"></div>
+            );
+
         return (
             <div>
                 {this.renderSearchFilters()}
@@ -197,19 +238,24 @@ class ImmutableDataGrid extends Component {
                     {this.renderHead()}
                     {this.renderRows()}
                 </Table>
-                <Pagination
-                    style={{ float: 'right', marginTop: '-10px', paddingRight: '13px' }}
-                    prev
-                    next
-                    first
-                    last
-                    ellipsis
-                    boundaryLinks
-                    bsSize="medium"
-                    items={totalPages}
-                    maxButtons={5}
-                    activePage={this.state.page}
-                    onSelect={(e) => this.handlePageSelect(e)} />
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+
+                    {limitDropDown}
+
+                    <Pagination
+                        style={{ float: 'right', marginTop: '10px', paddingRight: '13px' }}
+                        prev
+                        next
+                        first
+                        last
+                        ellipsis
+                        boundaryLinks
+                        bsSize="medium"
+                        items={totalPages}
+                        maxButtons={5}
+                        activePage={this.state.page}
+                        onSelect={(e) => this.handlePageSelect(e)} />
+                </div>
             </div>
         );
     }

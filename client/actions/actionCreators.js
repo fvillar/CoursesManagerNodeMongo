@@ -1,8 +1,9 @@
 import axios from 'axios';
+import _ from 'lodash';
 
 import Constants from '../constants/constants';
 
-const base = 'http://app.viomedia.com/courses/api';
+// const base = 'http://app.viomedia.com/courses/api';
 
 /* eslint-disable no-console */
 
@@ -82,7 +83,7 @@ class CourseActions {
     // =============================================== //
     // =============== ASYNC CALLS =================== //
     // =============================================== //
- 
+
     static loadCoursesAsync() {
 
         return function (dispatch) {
@@ -98,7 +99,7 @@ class CourseActions {
     }
 
     static filterUsersInServerAsync(data) {
-         return function (dispatch) {
+        return function (dispatch) {
             let queryUrl = '';
             let isSorting = false;
 
@@ -108,16 +109,32 @@ class CourseActions {
             }
 
             if (data['search']) {
+
                 if (data['search'].value != '') {
+
                     if (isSorting)
                         queryUrl += '&';
 
-                    queryUrl += `searchColumn=${data['search'].keys[0]}&searchValue=${data['search'].value}`;
+                    // Build the search query for the queryURL
+                    queryUrl += 'search=';
+                    _.forEach(data['search'], (query) => {
+                        queryUrl += '$(';
+                        _.forEach(query.keys, (val) => {
+                            if (_.last(query.keys) == val)
+                                queryUrl += val + '*' + query.value + ')';
+                            else
+                                queryUrl += val + ',';
+                        });
+                    });
+
+                    let limit = data['search'][0].limit;
+                    queryUrl += `&limit=${limit}`;
+
                 }
             }
 
             axios.get(`api/courses/filter/${data.page}?${queryUrl}`)
-                .then(function (response) {                    
+                .then(function (response) {
                     dispatch(CourseActions.coursesCount(response.data.count));
                     dispatch(CourseActions.loadCourses(response.data.courses));
                     dispatch(CourseActions.setCourseIsLoading(false));

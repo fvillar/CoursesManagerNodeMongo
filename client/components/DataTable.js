@@ -19,10 +19,19 @@ class DataTable extends Component {
         let options = { 
             /* Function that will provide the list with the applied filter (sort, paging, search) */
             filter: CourseActions.filterUsersInServerAsync,
+            /*
+                keys: is the array of keys where the search is going to be performed 
+                placeHolder: is the place holder for the search box
+            */
             search: [{
-                placeHolder: 'Search By Title',
-                keys: ['title']               
+                placeHolder: 'Search By Title/Category',
+                keys: ['title','category']               
             }],
+            /*
+                searchLimit: an array of the number of expected number of results to return
+                NOTE: This always need to be set when setting up the search
+             */
+            searchLimit: [5,10],
 
             /*
                 key: is the key for the item
@@ -70,7 +79,7 @@ class DataTable extends Component {
             immutableData: will be the list to be displayed in an immutable format.
         */
         return (
-            <div className='well' style={{paddingBottom: '30px'}}>
+            <div className='well'>
                 <ImmutableDataGrid
                     options={options}
                     dispatch={this.props.dispatch}
