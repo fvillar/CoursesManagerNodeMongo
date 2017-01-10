@@ -70,7 +70,7 @@ class DataTable extends Component {
             immutableData: will be the list to be displayed in an immutable format.
         */
         return (
-            <div className='well'>
+            <div className='well' style={{paddingBottom: '30px'}}>
                 <ImmutableDataGrid
                     options={options}
                     dispatch={this.props.dispatch}
