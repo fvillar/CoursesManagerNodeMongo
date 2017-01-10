@@ -117,9 +117,7 @@ class CourseActions {
             }
 
             axios.get(`api/courses/filter/${data.page}?${queryUrl}`)
-                .then(function (response) {
-                    console.log('res', response.data);
-                    
+                .then(function (response) {                    
                     dispatch(CourseActions.coursesCount(response.data.count));
                     dispatch(CourseActions.loadCourses(response.data.courses));
                     dispatch(CourseActions.setCourseIsLoading(false));
