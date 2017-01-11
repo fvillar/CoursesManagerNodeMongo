@@ -25,7 +25,8 @@ class DataTable extends Component {
             */
             search: [{
                 placeHolder: 'Search By Title/Category',
-                keys: ['title','category']               
+                keys: ['title','category'],
+                value: ''
             }],
             /*
                 searchLimit: an array of the number of expected number of results to return

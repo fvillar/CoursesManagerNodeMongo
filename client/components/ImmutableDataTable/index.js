@@ -117,6 +117,11 @@ class ImmutableDataGrid extends Component {
             i: i,
             limit: this.state.searchLimit
         });
+
+        let searchQuery = this.state.search;
+        searchQuery[i].value = value;
+
+        this.setState({ search: searchQuery });
     }
 
     renderSearchFilters() {
@@ -199,7 +204,16 @@ class ImmutableDataGrid extends Component {
     }
 
     handleResultLimitChange(e) {
-        this.setState({ searchLimit: e });
+        this.setState({ searchLimit: parseInt(e) });
+
+        this.filter({
+            keys: this.state.search[0].keys,
+            value: this.state.search[0].value,
+            type: 'search',
+            i: 0,
+            limit: e
+        });
+
     }
 
     render() {
