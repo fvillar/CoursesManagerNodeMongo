@@ -186,14 +186,23 @@ app.get('/api/courses/filter/:pageNumber/', function (req, res) {
       if (sortColumn == undefined && search != undefined) {
 
         // search = { title: { $regex: "to" } }// same as /to/        
-
-        db.courses.find(expression, function (err, courses) {
-          if (courses.length > itemsPerPage) {
-            res.json({ count: courses.length, courses: courses.slice(pageStart, pageEnd) });
-          } else {
-            res.json({ count: courses.length, courses: courses });
-          }
-        });
+        if (limit) {
+          db.courses.find(expression).limit(parseInt(limit), function (err, courses) {
+            if (courses.length > itemsPerPage) {
+              res.json({ count: courses.length, courses: courses.slice(pageStart, pageEnd) });
+            } else {
+              res.json({ count: courses.length, courses: courses });
+            }
+          });
+        } else {
+          db.courses.find(expression, function (err, courses) {
+            if (courses.length > itemsPerPage) {
+              res.json({ count: courses.length, courses: courses.slice(pageStart, pageEnd) });
+            } else {
+              res.json({ count: courses.length, courses: courses });
+            }
+          });
+        }
 
       } else {
 
@@ -205,11 +214,22 @@ app.get('/api/courses/filter/:pageNumber/', function (req, res) {
             sorts[sortColumn] = 1;
           else
             sorts[sortColumn] = -1;
-          
-          db.courses.find(expression).sort(sorts, function (err, courses) {
-            res.json({count: courses.length, courses: courses.slice(pageStart, pageEnd)});
-          });
 
+          if (limit) {
+            db.courses.find(expression).sort(sorts).limit(parseInt(limit), function (err, courses) {
+              if (courses.length > itemsPerPage)
+                res.json({ count: courses.length, courses: courses.slice(pageStart, pageEnd) });
+              else
+                res.json({ count: courses.length, courses: courses });
+            });
+          } else {
+            db.courses.find(expression).sort(sorts, function (err, courses) {
+              if (courses.length > itemsPerPage)
+                res.json({ count: courses.length, courses: courses.slice(pageStart, pageEnd) });
+              else
+                res.json({ count: courses.length, courses: courses });
+            });
+          }
         }
       }
     }
