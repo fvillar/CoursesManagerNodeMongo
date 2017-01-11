@@ -35,11 +35,14 @@ class ImmutableDataGrid extends Component {
             case 'search':
                 if (!this.filterQuery['search'])
                     this.filterQuery['search'] = [];
-                this.filterQuery['search'][data.i] = {
-                    keys: data.keys,
-                    value: data.value,
-                    limit: data.limit
-                };
+                if (data.value == '')
+                    this.filterQuery['search'].splice([data.i], 1);
+                else
+                    this.filterQuery['search'][data.i] = {
+                        keys: data.keys,
+                        value: data.value,
+                        limit: data.limit
+                    };
                 break;
             case 'paging':
                 this.filterQuery['page'] = data.pageNum;

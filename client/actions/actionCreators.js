@@ -108,6 +108,9 @@ class CourseActions {
                 queryUrl += `sortColumn=${data['sort'].key}&sortOrder=${data['sort'].order}`;
             }
 
+            if(data['search'] && data['search'].length == 0)
+                data['search'] = undefined;
+
             if (data['search']) {
 
                 if (data['search'].value != '') {
