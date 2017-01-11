@@ -15,12 +15,12 @@ class ImmutableDataGrid extends Component {
         };
     }
 
-    initialState() {
+    initialState() {        
         return {
             columns: this.props.options.columns,
             search: (this.props.options.search || undefined),
             searchLimit: (this.props.options.searchLimit) ? this.props.options.searchLimit[0] : undefined,
-            page: 1
+            page: courseInitialState.courses.get('activePage')
         };
     }
 
@@ -201,6 +201,7 @@ class ImmutableDataGrid extends Component {
     handlePageSelect(pageNum) {
         this.filter({ pageNum: pageNum, type: 'paging' });
         this.setState({ page: pageNum });
+        this.props.dispatch(CourseActions.updateActivePage(pageNum));
     }
 
     handleResultLimitChange(e) {
@@ -270,7 +271,7 @@ class ImmutableDataGrid extends Component {
                         bsSize="medium"
                         items={totalPages}
                         maxButtons={5}
-                        activePage={this.state.page}
+                        activePage={this.props.activePage}
                         onSelect={(e) => this.handlePageSelect(e)} />
                 </div>
             </div>

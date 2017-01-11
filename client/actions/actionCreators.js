@@ -2,6 +2,7 @@ import axios from 'axios';
 import _ from 'lodash';
 
 import Constants from '../constants/constants';
+import courseInitialState from '../initialState/courseInitialState';
 
 // const base = 'http://app.viomedia.com/courses/api';
 
@@ -80,6 +81,13 @@ class CourseActions {
         };
     }
 
+    static updateActivePage(num) {
+        return {
+            type: Constants.UPDATE_ACTIVE_PAGE,
+            page: num
+        };
+    }
+
     // =============================================== //
     // =============== ASYNC CALLS =================== //
     // =============================================== //
@@ -139,6 +147,8 @@ class CourseActions {
             axios.get(`api/courses/filter/${data.page}?${queryUrl}`)
                 .then(function (response) {
                     dispatch(CourseActions.coursesCount(response.data.count));
+                    if(response.data.count <= courseInitialState.courses.get('coursesPerPage'))
+                        dispatch(CourseActions.updateActivePage(1));
                     dispatch(CourseActions.loadCourses(response.data.courses));
                     dispatch(CourseActions.setCourseIsLoading(false));
                 })
@@ -146,16 +156,6 @@ class CourseActions {
                     console.log('Error in filterUsersInServerAsync ' + response);
                 });
         };
-
-        // return function (dispatch) {
-        //     axios.get(`/api/courses/filter/${data.key}/${data.order}`)
-        //         .then(function (response) {
-        //             dispatch(CourseActions.loadCourses(response.data));
-        //         })
-        //         .catch(function (response) {
-        //             console.log('Error in loadCoursesAsync ' + response);
-        //         });
-        // };
     }
 
     static addCourseAsync(course) {

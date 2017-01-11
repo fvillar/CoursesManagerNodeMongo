@@ -71,6 +71,9 @@ function coursesReducer(state = courseInitialState.courses, action) {
         case constants.COURSES_COUNT:
             state = state.set('count', (action.count));
             return state;
+        case constants.UPDATE_ACTIVE_PAGE:
+            state = state.set('activePage', action.page);
+            return state;
 
         default:
             return state;

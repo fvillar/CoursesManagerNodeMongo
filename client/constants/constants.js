@@ -10,7 +10,8 @@ var constants = {
         LOAD_AUTHOR: null,
         SORT_COURSES_CLIENT: null,
         SET_COURSE_ISLOADING: null,
-        COURSES_COUNT: null
+        COURSES_COUNT: null,
+        UPDATE_ACTIVE_PAGE: null
 };
 
 export default keyMirror(constants);

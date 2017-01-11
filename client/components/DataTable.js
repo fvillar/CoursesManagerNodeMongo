@@ -15,6 +15,7 @@ class DataTable extends Component {
 
         let coursesList = this.props.courses.get('coursesList');
         let totalNumRecords = this.props.courses.get('count');
+        let activePage =  this.props.courses.get('activePage');
 
         let options = { 
             /* Function that will provide the list with the applied filter (sort, paging, search) */
@@ -85,7 +86,8 @@ class DataTable extends Component {
                     options={options}
                     dispatch={this.props.dispatch}
                     immutableData={coursesList} 
-                    listLength={totalNumRecords} />
+                    listLength={totalNumRecords}
+                    activePage= {activePage} />
 
             </div>
         );
