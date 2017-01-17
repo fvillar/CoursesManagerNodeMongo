@@ -15,7 +15,7 @@ class ImmutableDataGrid extends Component {
         };
     }
 
-    initialState() {        
+    initialState() {
         return {
             columns: this.props.options.columns,
             search: (this.props.options.search || undefined),
@@ -33,10 +33,23 @@ class ImmutableDataGrid extends Component {
                 };
                 break;
             case 'search':
-                if (!this.filterQuery['search'])
-                    this.filterQuery['search'] = [];
-                if (data.value == '')
-                    this.filterQuery['search'].splice([data.i], 1);
+
+                if (!this.filterQuery['search']) {
+                    let n = [];
+                    for (let i = 0; i < data.i; i++) {
+                        n.push({});
+                    }
+                    this.filterQuery['search'] = n;
+                } else {
+                    for (let j = 0; j < data.i; j++) {
+                        if (!this.filterQuery['search'][j])
+                            this.filterQuery['search'].push({});
+                    }
+                }
+
+                if (data.value == '') {
+                    this.filterQuery['search'][data.i] = {};
+                }
                 else
                     this.filterQuery['search'][data.i] = {
                         keys: data.keys,
