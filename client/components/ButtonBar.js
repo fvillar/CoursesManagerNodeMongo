@@ -7,7 +7,7 @@ import CourseActions from '../actions/actionCreators';
 import { browserHistory } from 'react-router';
 
 
-class ButtonBar extends Component {
+export class ButtonBar extends Component {
     constructor(props, context) {
         super(props, context);
     }

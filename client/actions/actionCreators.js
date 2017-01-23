@@ -162,86 +162,86 @@ class CourseActions {
             }
 
 
-    axios.get(`api/courses/filter/${data.page}?${queryUrl}`)
+            axios.get(`api/courses/filter/${data.page}?${queryUrl}`)
                 .then(function (response) {
-    dispatch(CourseActions.coursesCount(response.data.count));
-    if (response.data.count <= courseInitialState.courses.get('coursesPerPage'))
-        dispatch(CourseActions.updateActivePage(1));
-    dispatch(CourseActions.loadCourses(response.data.courses));
-    dispatch(CourseActions.setCourseIsLoading(false));
-})
-    .catch(function (response) {
-        console.log('Error in filterUsersInServerAsync ' + response);
-    });
+                    dispatch(CourseActions.coursesCount(response.data.count));
+                    if (response.data.count <= courseInitialState.courses.get('coursesPerPage'))
+                        dispatch(CourseActions.updateActivePage(1));
+                    dispatch(CourseActions.loadCourses(response.data.courses));
+                    dispatch(CourseActions.setCourseIsLoading(false));
+                })
+                .catch(function (response) {
+                    console.log('Error in filterUsersInServerAsync ' + response);
+                });
         };
     }
 
     static addCourseAsync(course) {
 
-    return function (dispatch) {
+        return function (dispatch) {
 
-        axios.post('api/courses', course)
-            .then(function () {
-                dispatch(CourseActions.loadCoursesAsync());
-            })
-            .catch(function (response) {
-                console.log('Error in addCourse ' + response);
-            });
-    };
-}
+            axios.post('api/courses', course)
+                .then(function () {
+                    dispatch(CourseActions.loadCoursesAsync());
+                })
+                .catch(function (response) {
+                    console.log('Error in addCourse ' + response);
+                });
+        };
+    }
 
     static updateCourseAsync(course) {
 
-    return function (dispatch) {
-        axios.put(`api/courses/${course.Id}`, course)
-            .then(function () {
-                dispatch(CourseActions.loadCoursesAsync());
-            })
-            .catch(function (response) {
-                console.log('Error in updateCourseAsync ' + response);
-            });
-    };
-}
+        return function (dispatch) {
+            axios.put(`api/courses/${course.Id}`, course)
+                .then(function () {
+                    dispatch(CourseActions.loadCoursesAsync());
+                })
+                .catch(function (response) {
+                    console.log('Error in updateCourseAsync ' + response);
+                });
+        };
+    }
 
     static deleteCourseAsync(courseId) {
 
-    return function (dispatch) {
+        return function (dispatch) {
 
-        axios.delete(`api/courses/${courseId}`)
-            .then(function (response) {
-                dispatch(CourseActions.deleteCourse(response.data));
-            })
-            .catch(function (response) {
-                console.log('Error in deleteCourseAsync ' + response);
-            });
-    };
-}
+            axios.delete(`api/courses/${courseId}`)
+                .then(function (response) {
+                    dispatch(CourseActions.deleteCourse(response.data));
+                })
+                .catch(function (response) {
+                    console.log('Error in deleteCourseAsync ' + response);
+                });
+        };
+    }
 
     static loadAuthorsAsync() {
 
-    return function (dispatch) {
-        axios.get('api/authors')
-            .then(function (response) {
-                dispatch(CourseActions.loadAuthors(response.data));
-            })
-            .catch(function (response) {
-                console.log('Error in loadAuthorsAsync ' + response);
-            });
-    };
-}
+        return function (dispatch) {
+            axios.get('api/authors')
+                .then(function (response) {
+                    dispatch(CourseActions.loadAuthors(response.data));
+                })
+                .catch(function (response) {
+                    console.log('Error in loadAuthorsAsync ' + response);
+                });
+        };
+    }
 
     static loadAuthorAsync(authorId) {
 
-    return function (dispatch) {
-        axios.get(`api/authors/${authorId}`)
-            .then(function (response) {
-                dispatch(CourseActions.loadAuthor(response.data));
-            })
-            .catch(function (response) {
-                console.log('Error in loadAuthorAsync ' + response);
-            });
-    };
-}
+        return function (dispatch) {
+            axios.get(`api/authors/${authorId}`)
+                .then(function (response) {
+                    dispatch(CourseActions.loadAuthor(response.data));
+                })
+                .catch(function (response) {
+                    console.log('Error in loadAuthorAsync ' + response);
+                });
+        };
+    }
 }
 
 export default CourseActions;

@@ -8,7 +8,7 @@ import CourseActions from '../actions/actionCreators';
 import CourseList from './CourseList';
 import CourseContainer from './CourseContainer';
 
-class Home extends Component {
+export class Home extends Component {
     constructor(props, context) {
         super(props, context);
     }
@@ -17,7 +17,7 @@ class Home extends Component {
         setTimeout(() => {
             this.props.dispatch(CourseActions.setCourseIsLoading(true));
             this.props.dispatch(CourseActions.loadCoursesAsync());
-        },2000);
+        }, 2000);
     }
 
     onAddClick() {
@@ -35,7 +35,7 @@ class Home extends Component {
 
         if (courses.get('isLoading'))
             return (
-                <div className="container" style={{height:'500px'}}>
+                <div className="container" style={{ height: '500px' }}>
                     <div className="bookshelf_wrapper">
                         <ul className="books_list">
                             <li className="book_item first"></li>
