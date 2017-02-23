@@ -8,6 +8,9 @@ import courseInitialState from '../initialState/courseInitialState';
 
 /* eslint-disable no-console */
 
+let searchId = '';
+let searchArray = [];
+
 class CourseActions {
 
     static loadCourses(courses) {
@@ -161,18 +164,22 @@ class CourseActions {
                 }
             }
 
+            // If the search array is empty, create a new batch id
+            if (searchArray.length == 0) {
+                searchId = new Date().getTime().toString();
+            }
+            searchArray.push({ queryUrl: queryUrl, id: searchId, page: data.page });
 
-            axios.get(`api/courses/filter/${data.page}?${queryUrl}`)
-                .then(function (response) {
-                    dispatch(CourseActions.coursesCount(response.data.count));
-                    if (response.data.count <= courseInitialState.courses.get('coursesPerPage'))
-                        dispatch(CourseActions.updateActivePage(1));
-                    dispatch(CourseActions.loadCourses(response.data.courses));
-                    dispatch(CourseActions.setCourseIsLoading(false));
-                })
-                .catch(function (response) {
-                    console.log('Error in filterUsersInServerAsync ' + response);
-                });
+            // At callback we will process and display the changes
+            searchEvent((response) => {
+
+                dispatch(CourseActions.coursesCount(response.data.count));
+                if (response.data.count <= courseInitialState.courses.get('coursesPerPage'))
+                    dispatch(CourseActions.updateActivePage(1));
+                dispatch(CourseActions.loadCourses(response.data.courses));
+                dispatch(CourseActions.setCourseIsLoading(false));
+
+            });
         };
     }
 
@@ -242,6 +249,33 @@ class CourseActions {
                 });
         };
     }
+}
+
+/*
+ *  Function created to only show the last result set requested by the user
+ *  If thre is an extra time from the server, to serve for our request and
+ *  there is a subsequent request, it will only show the latter 
+ */
+function searchEvent(callback) {
+
+    searchArray.forEach((v, i) => {
+
+        if (!v.ran) {
+            searchArray[i].ran = true;
+
+            axios.get(`api/courses/filter/${v.page}?${v.queryUrl}`)
+                .then(function (response) {
+                    // just thelatest response from server will sent via the dispatcher
+                    if (searchArray.length - 1 == i && searchId == v.id) {
+                        searchArray = [];
+                        callback(response);
+                    }
+                })
+                .catch(function (response) {
+                    console.log('Error in filterUsersInServerAsync > searchEvent ' + response);
+                });
+        }
+    });
 }
 
 export default CourseActions;
